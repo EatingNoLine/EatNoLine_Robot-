@@ -16,4 +16,7 @@ typedef struct {
 void Arm_Init(Arm_TypeDef *arm, SE_TypeDef *se1, SE_TypeDef *se2);
 void Arm_SetGesgure(Arm_TypeDef *arm, double degree1, double degree2);
 
+void Arm_Grab(const Arm_TypeDef *arm);
+void Arm_Release(const Arm_TypeDef *arm);
+
 #endif //ARM_H
