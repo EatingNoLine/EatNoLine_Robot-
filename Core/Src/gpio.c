@@ -57,10 +57,10 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(SM_DIR_GPIO_Port, SM_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PtPin */
-  GPIO_InitStruct.Pin = SM_EN_Pin;
+  GPIO_InitStruct.Pin = SM_ENA_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(SM_EN_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(SM_ENA_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = SM_DIR_Pin;
