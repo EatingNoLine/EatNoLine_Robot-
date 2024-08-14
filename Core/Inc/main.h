@@ -57,8 +57,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define SM_PWM_Pin GPIO_PIN_8
-#define SM_PWM_GPIO_Port GPIOF
+#define SM_PUL_Pin GPIO_PIN_7
+#define SM_PUL_GPIO_Port GPIOF
 #define ENC_2B_Pin GPIO_PIN_1
 #define ENC_2B_GPIO_Port GPIOA
 #define ENC_2A_Pin GPIO_PIN_5
@@ -69,8 +69,8 @@ void Error_Handler(void);
 #define ENC_3B_GPIO_Port GPIOA
 #define ENC_1A_Pin GPIO_PIN_9
 #define ENC_1A_GPIO_Port GPIOE
-#define SM_EN_Pin GPIO_PIN_10
-#define SM_EN_GPIO_Port GPIOE
+#define SM_ENA_Pin GPIO_PIN_10
+#define SM_ENA_GPIO_Port GPIOE
 #define ENC_1B_Pin GPIO_PIN_11
 #define ENC_1B_GPIO_Port GPIOE
 #define SM_DIR_Pin GPIO_PIN_12
