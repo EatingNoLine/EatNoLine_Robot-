@@ -4,15 +4,13 @@
 
 #include "step_motor.h"
 
-#include <stdio.h>
-
 void SM_Init(SM_TypeDef *sm, TIM_HandleTypeDef *timer, uint32_t timer_channel,
              GPIO_TypeDef *enable_port, uint32_t enable_pin,
              GPIO_TypeDef *direction_port, uint32_t direction_pin) {
   // set up timer
   sm->timer = timer;
   sm->timer_channel = timer_channel;
-  __HAL_TIM_SetCompare(timer, timer_channel, 500);   // ARR = 1000 - 1
+  __HAL_TIM_SetCompare(timer, timer_channel, 500);  // ARR = 1000 - 1
 
   // set up default enable/directoin pin
   sm->enable_port = enable_port;
@@ -27,6 +25,7 @@ void SM_Init(SM_TypeDef *sm, TIM_HandleTypeDef *timer, uint32_t timer_channel,
   SM_SetSpeed(sm, SM_SPEED_Slow);
 
   // set default count and target
+  sm->is_run = false;
   sm->count = 0;
   sm->target = 0;
 }
@@ -57,28 +56,44 @@ void SM_SetSpeed(SM_TypeDef *sm, SM_SPEED_State speed) {
   __HAL_TIM_SET_PRESCALER(sm->timer, psc);
 }
 
-void SM_Run(SM_TypeDef *sm, SM_SPEED_State speed, uint32_t step) {
-  // set up the speed
+void SM_Run(SM_TypeDef *sm, SM_SPEED_State speed, uint32_t step, SM_DIERCTION_State dir) {
+  // wait for next run
+  while (sm->is_run) {
+  }
+
+  // set up the direction and speed
+  SM_SetDirection(sm, dir);
   SM_SetSpeed(sm, speed);
+
   // start timer's count function
+  sm->is_run = true;
   sm->count = 0;
   sm->target = step;
-  HAL_TIM_PWM_Start(sm->timer, sm->timer_channel);
+
+  __HAL_TIM_CLEAR_IT(sm->timer,
+                     TIM_IT_UPDATE);  // clear former update interrupts
+  HAL_TIM_Base_Start_IT(sm->timer);   // start interrupts
+  HAL_TIM_PWM_Start(sm->timer, sm->timer_channel);  // start pwm timer
 }
 
 void SM_UpdateCount(SM_TypeDef *sm) {
-  printf("count = %d\n", sm->count);
   if (sm->count < sm->target) {
     ++sm->count;
   } else if (sm->count == sm->target) {
-    sm->count = 0;
-    sm->target = 0;
     SM_Stop(sm);
   }
 }
 
 void SM_Stop(SM_TypeDef *sm) {
+  sm->is_run = false;
   sm->count = 0;
   sm->target = 0;
   HAL_TIM_PWM_Stop(sm->timer, sm->timer_channel);
+}
+
+void SM_Upload(SM_TypeDef *sm) {
+  // up
+  SM_Run(sm, SM_SPEED_Fast, 7500, SM_DIRECTION_FORWARD);
+  // down
+  SM_Run(sm, SM_SPEED_Fast, 7500, SM_DIRECTION_BACKWARD);
 }

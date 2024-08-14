@@ -5,6 +5,8 @@
 #ifndef STEP_MOTOR_H
 #define STEP_MOTOR_H
 
+#include <stdbool.h>
+
 #include "stm32f4xx_hal.h"
 
 typedef enum { SM_SPEED_Slow, SM_SPEED_Medium, SM_SPEED_Fast } SM_SPEED_State;
@@ -21,6 +23,7 @@ typedef struct {
   GPIO_TypeDef *direction_port;
   uint32_t direction_pin;
 
+  bool is_run;
   SM_SPEED_State speed;
   uint32_t count;
   uint32_t target;
@@ -31,8 +34,11 @@ void SM_Init(SM_TypeDef *sm, TIM_HandleTypeDef *timer, uint32_t timer_channel,
              GPIO_TypeDef *direction_port, uint32_t direction_pin);
 void SM_SetDirection(SM_TypeDef *sm, SM_DIERCTION_State dir);
 void SM_SetSpeed(SM_TypeDef *sm, SM_SPEED_State speed);
-void SM_Run(SM_TypeDef *sm, SM_SPEED_State speed, uint32_t step);
+void SM_Run(SM_TypeDef *sm, SM_SPEED_State speed, uint32_t step,
+            SM_DIERCTION_State dir);
 void SM_UpdateCount(SM_TypeDef *sm);
 void SM_Stop(SM_TypeDef *sm);
+
+void SM_Upload(SM_TypeDef *sm);
 
 #endif  // STEP_MOTOR_H
