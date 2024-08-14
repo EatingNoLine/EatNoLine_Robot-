@@ -1,11 +1,11 @@
 //
 // Created by azarai on 8/2/24.
 //
-
 #include "steering_engine.h"
 
-void SE_Init(SE_TypeDef* se, TIM_HandleTypeDef* timer, uint32_t channel,
-             double default_degree, double min_degree, double max_degree) {
+void SE_Init(SE_TypeDef* se, TIM_HandleTypeDef* timer, const uint32_t channel,
+             const double default_degree, const double min_degree,
+             const double max_degree) {
   // Set up the se instance
   se->timer = timer;
   se->timer_channel = channel;
@@ -21,7 +21,7 @@ void SE_Init(SE_TypeDef* se, TIM_HandleTypeDef* timer, uint32_t channel,
   HAL_TIM_PWM_Start(timer, channel);
 }
 
-void SE_Rotate(SE_TypeDef* se, double degree) {
+void SE_Rotate(SE_TypeDef* se, const double degree) {
   if (degree >= se->min_degree && degree <= se->max_degree) {
     se->degree = degree;
     __HAL_TIM_SetCompare(se->timer, se->timer_channel,
