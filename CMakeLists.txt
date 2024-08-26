@@ -52,6 +52,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
         User/Arm/steering_engine.c
         User/BLDC_Motor/bldc.c
         User/Step_Motor/step_motor.c
+        User/DC_Motor/dc_motor.c
         User/Pump/pump.c
 )
 
@@ -61,6 +62,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         User/Arm
         User/BLDC_Motor
         User/Step_Motor
+        User/DC_Motor
         User/Pump
 
 )
