@@ -43,11 +43,13 @@ Main STM32F4x Project for RoboGame 2024
 
 ![Power](./Images/power_supply.drawio.png)
 
-
 ## Connectivity
-
 
 | UART | RX   | TX  |
 | ---- | ---- | --- |
 | U1   | PA10 | PA9 |
 | U2   | PD6  | PD5 |
+
+# Speed Controller
+
+![SpeedController](./Images/speed_controller.drawio.png).
