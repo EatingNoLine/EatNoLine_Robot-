@@ -6,17 +6,19 @@
 
 void DM_Init(DM_Typedef *dm, TIM_HandleTypeDef *timer, uint32_t channel,
              GPIO_TypeDef *port_ina, uint32_t pin_ina, GPIO_TypeDef *port_inb,
-             uint32_t pin_inb, uint32_t max_output) {
+             uint32_t pin_inb, uint32_t max_output, uint32_t reduction_ratio) {
   // set up timer
   dm->timer = timer;
   dm->channel = channel;
-  __HAL_TIM_SetCompare(timer, channel, 0);
+  DM_SetOutput_Number(dm, 0);
   // set up INA pin
   dm->port_ina = port_ina;
   dm->pin_ina = pin_ina;
   // set up INB pin
   dm->port_inb = port_inb;
   dm->pin_inb = pin_inb;
+
+  dm->reduction_ratio = reduction_ratio;
 
   // default setting
   dm->output = 0;
