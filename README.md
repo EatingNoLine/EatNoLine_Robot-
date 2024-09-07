@@ -26,6 +26,13 @@ Main STM32F4x Project for RoboGame 2024
 | SE3            | PC8 (TIM8-CH3)       |
 | SE4            | PC9 (TIM8-CH4)       |
 
+### BLDC
+
+| BLDC  | PWM(TIMER-CHANNEL) |
+| ----- | ------------------ |
+| bldc1 | PB14 (TIM12-CH1)   |
+| bldc2 | PB15 (TIM12-CH2)   |
+
 ### Step Motor
 
 | StepMotor | Pulse (TIMER-CHANNEL) | Enable | Direction |
