@@ -54,6 +54,9 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
         User/Step_Motor/step_motor.c
         User/DC_Motor/dc_motor.c
         User/Pump/pump.c
+        User/Controller/pid.c
+        User/Controller/encoder.c
+        User/Controller/speed_controller.c
 )
 
 # Add include paths
@@ -64,6 +67,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         User/Step_Motor
         User/DC_Motor
         User/Pump
+        User/Controller
 
 )
 
