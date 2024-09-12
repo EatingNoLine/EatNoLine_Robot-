@@ -23,9 +23,8 @@
 #include "main.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
+#include "step_control.h"
 
-#include "step_motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,7 +44,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern SM_TypeDef sm;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,10 +61,14 @@ extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim3;
 extern TIM_HandleTypeDef htim4;
+extern TIM_HandleTypeDef htim5;
 extern TIM_HandleTypeDef htim8;
+extern TIM_HandleTypeDef htim9;
 extern TIM_HandleTypeDef htim11;
 extern TIM_HandleTypeDef htim12;
+extern TIM_HandleTypeDef htim13;
 extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -203,6 +205,7 @@ void TIM1_BRK_TIM9_IRQHandler(void) {
 
   /* USER CODE END TIM1_BRK_TIM9_IRQn 0 */
   HAL_TIM_IRQHandler(&htim1);
+  HAL_TIM_IRQHandler(&htim9);
   /* USER CODE BEGIN TIM1_BRK_TIM9_IRQn 1 */
 
   /* USER CODE END TIM1_BRK_TIM9_IRQn 1 */
@@ -303,6 +306,19 @@ void USART1_IRQHandler(void) {
 }
 
 /**
+ * @brief This function handles USART2 global interrupt.
+ */
+void USART2_IRQHandler(void) {
+  /* USER CODE BEGIN USART2_IRQn 0 */
+
+  /* USER CODE END USART2_IRQn 0 */
+  HAL_UART_IRQHandler(&huart2);
+  /* USER CODE BEGIN USART2_IRQn 1 */
+
+  /* USER CODE END USART2_IRQn 1 */
+}
+
+/**
  * @brief This function handles TIM8 break interrupt and TIM12 global interrupt.
  */
 void TIM8_BRK_TIM12_IRQHandler(void) {
@@ -325,6 +341,7 @@ void TIM8_UP_TIM13_IRQHandler(void) {
 
   /* USER CODE END TIM8_UP_TIM13_IRQn 0 */
   HAL_TIM_IRQHandler(&htim8);
+  HAL_TIM_IRQHandler(&htim13);
   /* USER CODE BEGIN TIM8_UP_TIM13_IRQn 1 */
 
   /* USER CODE END TIM8_UP_TIM13_IRQn 1 */
@@ -357,13 +374,29 @@ void TIM8_CC_IRQHandler(void) {
   /* USER CODE END TIM8_CC_IRQn 1 */
 }
 
+/**
+ * @brief This function handles TIM5 global interrupt.
+ */
+void TIM5_IRQHandler(void) {
+  /* USER CODE BEGIN TIM5_IRQn 0 */
+
+  /* USER CODE END TIM5_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim5);
+  /* USER CODE BEGIN TIM5_IRQn 1 */
+
+  /* USER CODE END TIM5_IRQn 1 */
+}
+
 /* USER CODE BEGIN 1 */
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-  if (htim == &htim11 && sm.is_run) {
-    SM_UpdateCount(&sm);
+  if (htim == &htim11) {
+    if (sm.is_run) {
+      Az_Step_UpdateCount();
+    }
+  } else {
+    UNUSED(htim);
   }
-  UNUSED(htim);
 }
 
 /* USER CODE END 1 */

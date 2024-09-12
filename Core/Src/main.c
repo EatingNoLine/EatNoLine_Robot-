@@ -27,9 +27,12 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 
-#include "arm.h"
-#include "bldc.h"
-#include "step_motor.h"
+#include "arm_control.h"
+#include "bldc_control.h"
+#include "communicate.h"
+#include "motor_control.h"
+#include "pump_control.h"
+#include "step_control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -39,7 +42,15 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#ifdef __GNUC__
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+#define GETCHAR_PROTOTYPE int __io_getchar(void)
+#else
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#define GETCHAR_PROTOTYPE int fgetc(FILE *f)
+#endif
 
+#define RXBUFFERSIZE 256
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -50,17 +61,15 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-Arm_TypeDef arm1, arm2;
-BLDC_TypeDef bldc1, bldc2;
-SM_TypeDef sm;
+
+// serial community
+char RxBuffer[RXBUFFERSIZE];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void Az_Arm_Init(void);
-void Az_BLDC_Init(void);
-void Az_SM_Init(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -102,34 +111,33 @@ int main(void) {
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_TIM12_Init();
-  MX_TIM13_Init();
   MX_TIM8_Init();
+  MX_TIM11_Init();
   MX_TIM5_Init();
+  MX_TIM9_Init();
+  MX_USART2_UART_Init();
+  MX_TIM13_Init();
   /* USER CODE BEGIN 2 */
-  printf("Program Start\n");
+  setvbuf(stdin, NULL, _IONBF, 0 );
 
+  // Initialize all devices
+  Az_Motor_Init();
+  Az_Step_Init();
   Az_Arm_Init();
+  Az_Pump_Init();
   Az_BLDC_Init();
-  Az_SM_Init();
-
-  // SM_Run(&sm, SM_SPEED_Fast, 10);
-  Arm_SetGesgure(&arm1, 100, 100);
-  HAL_Delay(2000);
-  Arm_SetGesgure(&arm1, 105, 105);
-  HAL_Delay(2000);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int i = 0;
   while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-    printf("%dth main loop\n", ++i);
-    HAL_Delay(1000);
+    Az_Com_ExecCommand();
+    // printf("hello\n");
+    HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
@@ -178,33 +186,15 @@ void SystemClock_Config(void) {
 }
 
 /* USER CODE BEGIN 4 */
-int __io_putchar(int ch) {
-  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+PUTCHAR_PROTOTYPE {
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
   return ch;
 }
 
-void Az_Arm_Init(void) {
-  // double default_degree[4] = {13, 0, 90, 90};
-  // double default_degree[4] = {113, 163, 90, 90};
-  double default_degree[4] = {90, 90, 90, 90};
-
-  SE_TypeDef se[4];
-  for (uint32_t i = 0; i < 4; ++i) {
-    SE_Init(&se[i], &htim8, 0x00000004U * i, default_degree[i], 0, 180);
-  }
-
-  Arm_Init(&arm1, &se[0], &se[1]);
-  Arm_Init(&arm2, &se[2], &se[3]);
-}
-
-void Az_BLDC_Init(void) {
-  BLDC_Init(&bldc1, &htim12, TIM_CHANNEL_1, 50, 100);
-  BLDC_Init(&bldc2, &htim12, TIM_CHANNEL_2, 50, 100);
-}
-
-void Az_SM_Init(void) {
-  SM_Init(&sm, &htim5, TIM_CHANNEL_1, SM_EN_GPIO_Port, SM_EN_Pin,
-          SM_DIR_GPIO_Port, SM_DIR_Pin);
+GETCHAR_PROTOTYPE {
+  uint8_t ch = 0;
+  HAL_UART_Receive(&huart1, &ch, 1, HAL_MAX_DELAY);
+  return ch;
 }
 /* USER CODE END 4 */
 

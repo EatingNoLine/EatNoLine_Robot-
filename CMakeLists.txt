@@ -48,26 +48,18 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
         # Add user sources here
-        User/Arm/arm.c
-        User/Arm/steering_engine.c
-        User/BLDC_Motor/bldc.c
-        User/Step_Motor/step_motor.c
-        User/DC_Motor/dc_motor.c
-        User/Pump/pump.c
-        User/Controller/pid.c
-        User/Controller/encoder.c
-        User/Controller/speed_controller.c
+        User/AzarAI/motor_control.c
+        User/AzarAI/pump_control.c
+        User/AzarAI/bldc_control.c
+        User/AzarAI/arm_control.c
+        User/AzarAI/step_control.c
+        User/AzarAI/communicate.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
         # Add user defined include paths
-        User/Arm
-        User/BLDC_Motor
-        User/Step_Motor
-        User/DC_Motor
-        User/Pump
-        User/Controller
+        User/AzarAI
 
 )
 
