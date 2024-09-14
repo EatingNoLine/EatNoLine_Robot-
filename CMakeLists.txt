@@ -54,6 +54,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
         User/AzarAI/arm_control.c
         User/AzarAI/step_control.c
         User/AzarAI/communicate.c
+        User/AzarAI/pid.c
 )
 
 # Add include paths

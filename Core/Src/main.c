@@ -33,6 +33,7 @@
 #include "motor_control.h"
 #include "pump_control.h"
 #include "step_control.h"
+// #include "pid.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -118,14 +119,24 @@ int main(void) {
   MX_USART2_UART_Init();
   MX_TIM13_Init();
   /* USER CODE BEGIN 2 */
-  setvbuf(stdin, NULL, _IONBF, 0 );
+  setvbuf(stdin, NULL, _IONBF, 0);
 
   // Initialize all devices
   Az_Motor_Init();
-  Az_Step_Init();
-  Az_Arm_Init();
-  Az_Pump_Init();
+  // Az_Step_Init();
+  // Az_Arm_Init();
+  // Az_Pump_Init();
   Az_BLDC_Init();
+
+  HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_1 | TIM_CHANNEL_2);
+  HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_1 | TIM_CHANNEL_2);
+  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_1 | TIM_CHANNEL_2);
+  HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_1 | TIM_CHANNEL_2);
+
+  // Az_Motor_SetSpeed(&dm[0], 0.5);
+  // Az_Motor_SetSpeed(&dm[1], 0.5);
+  // Az_Motor_SetSpeed(&dm[2], 0.5);
+  Az_Motor_SetSpeed(&dm[3], 0.5);
 
   /* USER CODE END 2 */
 
@@ -135,9 +146,11 @@ int main(void) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    Az_Com_ExecCommand();
-    // printf("hello\n");
-    HAL_Delay(100);
+    // Az_Com_ExecCommand();
+    printf("Count 1:%d  2:%d  3:%d  4:%d\n", __HAL_TIM_GetCounter(&htim1),
+           __HAL_TIM_GetCounter(&htim2), __HAL_TIM_GetCounter(&htim3),
+           __HAL_TIM_GetCounter(&htim4));
+    HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
