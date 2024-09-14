@@ -69,8 +69,9 @@ void Az_Arm_Grab(Arm *a) {
   Az_Pump_Open(&pump[side ? 0 : 1]);
   HAL_Delay(2000);
 
-  Az_BLDC_SetSpeed(&bldc[0], BLDC_Speed_Light_4);
-  Az_BLDC_SetSpeed(&bldc[1], BLDC_Speed_Light_4);
+  // Turn on the BLDC
+  Az_BLDC_SetSpeed(&bldc[0], BLDC_Speed_1);
+  Az_BLDC_SetSpeed(&bldc[1], BLDC_Speed_1);
 
   Az_Arm_SetPosture(*a, 113, 160);
   HAL_Delay(2000);
