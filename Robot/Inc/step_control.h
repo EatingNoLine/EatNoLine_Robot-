@@ -5,8 +5,9 @@
 #ifndef STEP_CONTROL_H
 #define STEP_CONTROL_H
 
-#include <stdbool.h>
 #include "main.h"
+
+#include <stdbool.h>
 
 // Configurations of the step motor
 //    ----------------------------
@@ -27,30 +28,34 @@ typedef enum _SM_Direction {
 } SM_Direction;
 
 typedef struct _SM {
-  GPIO_TypeDef *port_ena;
-  uint32_t pin_ena;
-
-  GPIO_TypeDef *port_dir;
-  uint32_t pin_dir;
-
+  // Timer for generating pulses
   TIM_HandleTypeDef *timer;
   uint32_t channel;
-
+  // Enable pin
+  GPIO_TypeDef *port_ena;
+  uint32_t pin_ena;
+  // Direction pin
+  GPIO_TypeDef *port_dir;
+  uint32_t pin_dir;
+  // Data for pulse generating
   bool is_run;
   uint32_t count;
   uint32_t maxCount;
 } SM;
 
-// Variables needed
+// Extern global variables
 extern TIM_HandleTypeDef htim11;
+
+// Global variables
 extern SM sm;
+extern bool isStepInited;
 
 // Functions provided
-void Az_Step_Init(void);
-void Az_Step_SetDirection(SM_Direction dir);
-void Az_Step_Run(uint32_t count);
-void Az_Step_UpdateCount(void);
-void Az_Step_Upload(void);
+void Step_Init(void);
+void Step_SetDirection(SM_Direction dir);
+void Step_Run(uint32_t count);
+void Step_UpdateCount(void);
+void Step_Upload(void);
 
 
 #endif //STEP_CONTROL_H

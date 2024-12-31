@@ -51,11 +51,11 @@ extern SE se[4];
 extern Arm arm[2];
 
 // Functions provided
-void Az_SE_SetDegree(SE se, uint32_t degree);
+void SE_SetDegree(SE se, uint32_t degree);
 
-void Az_Arm_Init(void);
-void Az_Arm_SetPosture(Arm a, uint32_t deg1, uint32_t deg2);
-void Az_Arm_SetDefaultDegree(Arm a);
-void Az_Arm_Grab(Arm *a);
+void Arm_Init(void);
+void Arm_SetPosture(Arm a, uint32_t deg1, uint32_t deg2);
+void Arm_SetDefaultDegree(Arm a);
+void Arm_Grab(Arm *a);
 
 #endif  // ARM_CONTROL_H

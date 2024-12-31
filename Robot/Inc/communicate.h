@@ -16,14 +16,16 @@ extern char ComBuffer[BUFFERSIZE];
 #define COMMAND_RUN_5   (5)
 #define COMMAND_GRAB    (6)
 #define COMMAND_ROTATE  (7)
+#define COMMAND_SHOOT  (8)
 
 // Community
-void Az_Com_GetCommand(void);
-void Az_Com_Parse(void);
-void Az_Com_ExecCommand(void);
+void Com_GetCommand(void);
+void Com_Parse(void);
+void Com_ExecCommand(void);
 // Functions for executing
-void Az_Com_Stop(void);
-void Az_Com_Run(void);
-void Az_Com_Grab(void);
+void Com_Stop(void);
+void Com_Run(void);
+void Com_Grab(void);
+void Com_Shoot(void);
 
 #endif  // COMMUTICATE_H

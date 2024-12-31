@@ -10,7 +10,7 @@
 SE se[4];
 Arm arm[2];
 
-void Az_Arm_Init(void) {
+void Arm_Init(void) {
   // Initialize the steering engines
   se[0].timer = &htim8;
   se[1].timer = &htim8;
@@ -29,8 +29,8 @@ void Az_Arm_Init(void) {
   arm[1].se2 = &se[3];
 
   // Set up the timer's degree
-  Az_Arm_SetDefaultDegree(arm[0]);
-  Az_Arm_SetDefaultDegree(arm[1]);
+  Arm_SetDefaultDegree(arm[0]);
+  Arm_SetDefaultDegree(arm[1]);
 
   // Start timer
   HAL_TIM_PWM_Start(arm[0].se1->timer, arm[0].se1->channel);
@@ -39,7 +39,7 @@ void Az_Arm_Init(void) {
   HAL_TIM_PWM_Start(arm[1].se2->timer, arm[1].se2->channel);
 }
 
-void Az_SE_SetDegree(const SE se, uint32_t degree) {
+void SE_SetDegree(const SE se, uint32_t degree) {
   // Limit degree within 180
   if (degree > 180) degree = 180;
   // Calculate the degree
@@ -48,49 +48,36 @@ void Az_SE_SetDegree(const SE se, uint32_t degree) {
   __HAL_TIM_SetCompare(se.timer, se.channel, compare);
 }
 
-void Az_Arm_SetPosture(const Arm a, const uint32_t deg1, const uint32_t deg2) {
-  Az_SE_SetDegree(*(a.se1), deg1);
-  Az_SE_SetDegree(*(a.se2), deg2);
+void Arm_SetPosture(const Arm a, const uint32_t deg1, const uint32_t deg2) {
+  SE_SetDegree(*(a.se1), deg1);
+  SE_SetDegree(*(a.se2), deg2);
 }
 
-void Az_Arm_SetDefaultDegree(const Arm a) {
+void Arm_SetDefaultDegree(const Arm a) {
   static uint32_t deg1 = 90;
   static uint32_t deg2 = 90;
 
-  Az_SE_SetDegree(*a.se1, deg1);
-  Az_SE_SetDegree(*a.se2, deg2);
+  SE_SetDegree(*a.se1, deg1);
+  SE_SetDegree(*a.se2, deg2);
 }
 
-void Az_Arm_Grab(Arm *a) {
+void Arm_Grab(Arm *a) {
   bool side = (a == &arm[0]);
 
   // Arm
-  Az_Arm_SetPosture(*a, 13, 0);
-  Az_Pump_Open(&pump[side ? 0 : 1]);
+  Arm_SetPosture(*a, 13, 0);
+  Pump_Open(&pump[side ? 0 : 1]);
   HAL_Delay(2000);
 
-  // Turn on the BLDC
-  Az_BLDC_SetSpeed(&bldc[0], BLDC_Speed_1);
-  Az_BLDC_SetSpeed(&bldc[1], BLDC_Speed_1);
+  Arm_SetPosture(*a, 109, 0);
+  HAL_Delay(300);
+  Arm_SetPosture(*a, 109, 175);
+  HAL_Delay(1700);
 
-  Az_Arm_SetPosture(*a, 113, 160);
-  HAL_Delay(2000);
+  // Arm_SetPosture(*a, 109, 175);
+  // HAL_Delay(2000);
 
-  Az_Pump_Close(&pump[side ? 0 : 1]);
+  Pump_Close(&pump[side ? 0 : 1]);
   HAL_Delay(500);
-  Az_Arm_SetDefaultDegree(*a);
-
-  // Step Motor
-  Az_Step_SetDirection(SM_Backward);
-  Az_Step_Run(6000);
-
-  Az_Step_Run(13000);
-  Az_Step_SetDirection(SM_Forward);
-
-  Az_Step_Run(7000);
-  Az_Step_SetDirection(SM_Backward);
-
-  HAL_Delay(1000);
-  Az_BLDC_SetSpeed(&bldc[0], BLDC_Speed_0);
-  Az_BLDC_SetSpeed(&bldc[1], BLDC_Speed_0);
+  Arm_SetDefaultDegree(*a);
 }

@@ -22,8 +22,10 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "step_control.h"
+#include <stdio.h>
 
+#include "motor_control.h"
+#include "step_control.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,9 +67,8 @@ extern TIM_HandleTypeDef htim8;
 extern TIM_HandleTypeDef htim9;
 extern TIM_HandleTypeDef htim11;
 extern TIM_HandleTypeDef htim12;
-extern TIM_HandleTypeDef htim13;
+extern TIM_HandleTypeDef htim14;
 extern UART_HandleTypeDef huart1;
-extern UART_HandleTypeDef huart2;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -324,20 +325,6 @@ void USART1_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles USART2 global interrupt.
-  */
-void USART2_IRQHandler(void)
-{
-  /* USER CODE BEGIN USART2_IRQn 0 */
-
-  /* USER CODE END USART2_IRQn 0 */
-  HAL_UART_IRQHandler(&huart2);
-  /* USER CODE BEGIN USART2_IRQn 1 */
-
-  /* USER CODE END USART2_IRQn 1 */
-}
-
-/**
   * @brief This function handles TIM8 break interrupt and TIM12 global interrupt.
   */
 void TIM8_BRK_TIM12_IRQHandler(void)
@@ -361,7 +348,6 @@ void TIM8_UP_TIM13_IRQHandler(void)
 
   /* USER CODE END TIM8_UP_TIM13_IRQn 0 */
   HAL_TIM_IRQHandler(&htim8);
-  HAL_TIM_IRQHandler(&htim13);
   /* USER CODE BEGIN TIM8_UP_TIM13_IRQn 1 */
 
   /* USER CODE END TIM8_UP_TIM13_IRQn 1 */
@@ -376,6 +362,7 @@ void TIM8_TRG_COM_TIM14_IRQHandler(void)
 
   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 0 */
   HAL_TIM_IRQHandler(&htim8);
+  HAL_TIM_IRQHandler(&htim14);
   /* USER CODE BEGIN TIM8_TRG_COM_TIM14_IRQn 1 */
 
   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 1 */
@@ -413,8 +400,17 @@ void TIM5_IRQHandler(void)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
   if (htim == &htim11) {
-    if (sm.is_run) {
-      Az_Step_UpdateCount();
+    // BLDC Timer Source
+    if (isStepInited && sm.is_run) {
+      Step_UpdateCount();
+    }
+  } else if (htim == &htim14) {
+    // Encoder Timer Source
+    if (isMotorInited) {
+      // DM_UpdateOutput(0);
+      // DM_UpdateOutput(1);
+      // DM_UpdateOutput(2);
+      // DM_UpdateOutput(3);
     }
   } else {
     UNUSED(htim);

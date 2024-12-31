@@ -87,7 +87,7 @@ extern TIM_HandleTypeDef htim12;
 extern BLDC bldc[4];
 
 // Functions provided
-void Az_BLDC_Init(void);
-void Az_BLDC_SetSpeed(BLDC *pBldc, BLDC_Speed speed);
+void BLDC_Init(void);
+void BLDC_SetSpeed(BLDC *pBldc, BLDC_Speed speed);
 
 #endif  // BLDC_CONTROL_H

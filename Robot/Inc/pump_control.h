@@ -35,9 +35,9 @@ typedef struct _PUMP{
 extern PUMP pump[2];
 
 // Functions provided
-void Az_Pump_Init(void);
-void Az_Pump_Open(PUMP *pump);
-void Az_Pump_Close(PUMP *pump);
-void Az_Pump_Toggle(PUMP *pump);
+void Pump_Init(void);
+void Pump_Open(PUMP *pump);
+void Pump_Close(PUMP *pump);
+void Pump_Toggle(PUMP *pump);
 
 #endif //PUMP_CONTROL_H
